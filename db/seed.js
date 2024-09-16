@@ -1,9 +1,23 @@
-import { createClient } from '@supabase/supabase-js'
+/* eslint-env node */
+
 import { fakerEN_GB as faker } from '@faker-js/faker'
+import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
 
-async function seedProjects(numEntries = 10) {
+function logErrorAndExit(tableName, error) {
+  console.error(
+    `An error occurred in table '${tableName}' with code ${error.code}: ${error.message}`,
+  )
+  process.exit(1)
+}
+
+function logStep(stepMessage) {
+  console.log(stepMessage)
+}
+
+async function seedProjects(numEntries) {
+  logStep('Seeding projects...')
   const projects = []
 
   for (let i = 0; i < numEntries; i++) {
@@ -17,7 +31,20 @@ async function seedProjects(numEntries = 10) {
     })
   }
 
-  await supabase.from('projects').insert(projects)
+  const { data, error } = await supabase.from('projects').insert(projects).select('id')
+
+  if (error)
+    return logErrorAndExit('Projects', error)
+
+  logStep('Projects seeded successfully.')
+
+  return data
 }
 
-await seedProjects()
+async function seedDatabase(numEntriesPerTable) {
+  await seedProjects(numEntriesPerTable)
+}
+
+const numEntriesPerTable = 10
+
+seedDatabase(numEntriesPerTable)
