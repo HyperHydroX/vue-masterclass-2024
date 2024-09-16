@@ -1,9 +1,23 @@
-import { createClient } from '@supabase/supabase-js'
+/* eslint-env node */
+
 import { fakerEN_GB as faker } from '@faker-js/faker'
+import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
 
-async function seedProjects(numEntries = 10) {
+function logErrorAndExit(tableName, error) {
+  console.error(
+    `An error occurred in table '${tableName}' with code ${error.code}: ${error.message}`,
+  )
+  process.exit(1)
+}
+
+function logStep(stepMessage) {
+  console.log(stepMessage)
+}
+
+async function seedProjects(numEntries) {
+  logStep('Seeding projects...')
   const projects = []
 
   for (let i = 0; i < numEntries; i++) {
@@ -17,7 +31,46 @@ async function seedProjects(numEntries = 10) {
     })
   }
 
-  await supabase.from('projects').insert(projects)
+  const { data, error } = await supabase.from('projects').insert(projects).select('id')
+
+  if (error)
+    return logErrorAndExit('Projects', error)
+
+  logStep('Projects seeded successfully.')
+
+  return data
 }
 
-await seedProjects()
+async function seedTasks(numEntries, projectIds) {
+  logStep('Seeding tasks...')
+  const tasks = []
+
+  for (let i = 0; i < numEntries; i++) {
+    tasks.push({
+      name: faker.lorem.words(3),
+      status: faker.helpers.arrayElement(['in-progress', 'completed']),
+      description: faker.lorem.paragraph(),
+      due_date: faker.date.future(),
+      project_id: faker.helpers.arrayElement(projectIds),
+      collaborators: faker.helpers.arrayElements([1, 2, 3]),
+    })
+  }
+
+  const { data, error } = await supabase.from('tasks').insert(tasks).select('id')
+
+  if (error)
+    return logErrorAndExit('Tasks', error)
+
+  logStep('Tasks seeded successfully.')
+
+  return data
+}
+
+async function seedDatabase(numEntriesPerTable) {
+  const projectIds = (await seedProjects(numEntriesPerTable)).map(project => project.id)
+  await seedTasks(numEntriesPerTable, projectIds)
+}
+
+const numEntriesPerTable = 10
+
+seedDatabase(numEntriesPerTable)

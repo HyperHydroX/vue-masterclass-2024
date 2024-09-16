@@ -1,8 +1,8 @@
 {
   "name": "vue3-masterclass-2024",
+  "type": "module",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
@@ -12,32 +12,39 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write src/",
+    "supabase:init": "supabase init",
+    "supabase:login": "supabase login",
+    "supabase:link": "supabase link --project-id ybreeguzaxlhqxvpafbh",
+    "supabase:types": "npx supabase gen types --lang=typescript --project-id ybreeguzaxlhqxvpafbh --schema public > db/types.ts",
     "db:reset": "supabase db reset --linked",
-    "db:seed": "node --env-file=.env db/seed.js"
+    "db:seed": "node --env-file=.env db/seed.js",
+    "db:migrate-new": "supabase migration new",
+    "db:migrate-up": "supabase migration up --linked"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.43.4",
     "pinia": "^2.1.7",
-    "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue": "^3.4.29",
+    "vue-router": "^4.3.3"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.21.1",
+    "@antfu/eslint-config": "^2.27.3",
     "@faker-js/faker": "^8.4.1",
-    "@rushstack/eslint-patch": "^1.8.0",
+    "@rushstack/eslint-patch": "^1.10.3",
     "@tsconfig/node20": "^20.1.4",
-    "@types/node": "^20.12.5",
-    "@vitejs/plugin-vue": "^5.0.4",
+    "@types/node": "^20.14.5",
+    "@vitejs/plugin-vue": "^5.0.5",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.1",
     "eslint": "^8.57.0",
-    "eslint-plugin-vue": "^9.23.0",
-    "npm-run-all2": "^6.1.2",
-    "prettier": "^3.2.5",
-    "typescript": "~5.4.0",
+    "eslint-plugin-vue": "^9.26.0",
+    "npm-run-all2": "^6.2.0",
+    "prettier": "^3.3.2",
+    "supabase": "^1.192.5",
+    "typescript": "~5.4.5",
     "unplugin-vue-router": "^0.9.1",
-    "vite": "^5.2.8",
-    "vue-tsc": "^2.0.11"
+    "vite": "^5.3.1",
+    "vue-tsc": "^2.0.21"
   }
 }
