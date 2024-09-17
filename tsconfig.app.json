@@ -9,6 +9,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "typed-router.d.ts", "db/types.ts"],
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "typed-router.d.ts", "db/types.ts", "components.d.ts"],
   "exclude": ["src/**/__tests__/*"]
 }

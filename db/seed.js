@@ -3,17 +3,18 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+const supabase = createClient(require('node:process').env.VITE_SUPABASE_URL, require('node:process').env.SUPABASE_SERVICE_ROLE_KEY)
 
 function logErrorAndExit(tableName, error) {
   console.error(
     `An error occurred in table '${tableName}' with code ${error.code}: ${error.message}`,
   )
-  process.exit(1)
+  require('node:process').exit(1)
 }
 
 function logStep(stepMessage) {
-  console.log(stepMessage)
+  // eslint-disable-next-line no-console
+  console.info(stepMessage)
 }
 
 async function seedProjects(numEntries) {

@@ -1,5 +1,9 @@
 <script setup lang="ts"></script>
 
-<template></template>
+<template>
+  <div>
+    <h2>Error</h2>
+  </div>
+</template>
 
 <style scoped></style>
