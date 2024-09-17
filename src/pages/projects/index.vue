@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { h, ref } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
+import { RouterLink } from 'vue-router'
 import type { Tables } from '../../../db/types'
 import { supabase } from '@/supabase/supabaseClient'
 import DataTable from '@/components/ui/data-table/DataTable.vue'
@@ -22,7 +23,14 @@ const columns: ColumnDef<Tables<'projects'>>[] = [
     accessorKey: 'name',
     header: () => h('div', { class: 'text-left' }, 'Name'),
     cell: ({ row }) =>
-      h('div', { class: 'text-left font-medium' }, row.getValue('name')),
+      h(
+        RouterLink,
+        {
+          to: `/projects/${row.original.slug}`,
+          class: 'text-left font-medium hover:bg-muted block w-full',
+        },
+        () => row.getValue('name'),
+      ),
   },
   {
     accessorKey: 'status',
