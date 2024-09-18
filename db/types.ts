@@ -13,6 +13,7 @@ export interface Database {
         Row: {
           collaborators: string[]
           create_at: string
+          description: string | null
           id: number
           name: string
           slug: string
@@ -21,6 +22,7 @@ export interface Database {
         Insert: {
           collaborators?: string[]
           create_at?: string
+          description?: string | null
           id?: never
           name: string
           slug: string
@@ -29,6 +31,7 @@ export interface Database {
         Update: {
           collaborators?: string[]
           create_at?: string
+          description?: string | null
           id?: never
           name?: string
           slug?: string

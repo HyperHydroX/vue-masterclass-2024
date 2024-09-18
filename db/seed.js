@@ -3,7 +3,8 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(require('node:process').env.VITE_SUPABASE_URL, require('node:process').env.SUPABASE_SERVICE_ROLE_KEY)
+// eslint-disable-next-line node/prefer-global/process
+const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
 
 function logErrorAndExit(tableName, error) {
   console.error(
@@ -27,6 +28,7 @@ async function seedProjects(numEntries) {
     projects.push({
       name,
       slug: name.toLocaleLowerCase().replace(/ /g, '-'),
+      description: faker.lorem.paragraphs(2),
       status: faker.helpers.arrayElement(['in-progress', 'completed']),
       collaborators: faker.helpers.arrayElements([1, 2, 3]),
     })
