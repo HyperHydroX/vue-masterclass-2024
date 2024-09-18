@@ -3,17 +3,19 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { createClient } from '@supabase/supabase-js'
 
+// eslint-disable-next-line node/prefer-global/process
 const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
 
 function logErrorAndExit(tableName, error) {
   console.error(
     `An error occurred in table '${tableName}' with code ${error.code}: ${error.message}`,
   )
-  process.exit(1)
+  require('node:process').exit(1)
 }
 
 function logStep(stepMessage) {
-  console.log(stepMessage)
+  // eslint-disable-next-line no-console
+  console.info(stepMessage)
 }
 
 async function seedProjects(numEntries) {
@@ -26,6 +28,7 @@ async function seedProjects(numEntries) {
     projects.push({
       name,
       slug: name.toLocaleLowerCase().replace(/ /g, '-'),
+      description: faker.lorem.paragraphs(2),
       status: faker.helpers.arrayElement(['in-progress', 'completed']),
       collaborators: faker.helpers.arrayElements([1, 2, 3]),
     })

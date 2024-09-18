@@ -1,33 +1,31 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { Tables } from '../../../db/types'
-import { supabase } from '@/supabase/supabaseClient'
+import { usePageStore } from '@/stores/page'
+import type { Projects } from '@/utils/supaQueries'
+import { projectsQuery } from '@/utils/supaQueries'
+import { columns } from '@/utils/tableColumns/projectsColumns'
+import { useErrorStore } from '@/stores/error'
 
-const projects = ref<Tables<'projects'>[] | null>(null);
-(async () => {
-  const { data, error } = await supabase.from('projects').select()
+const { pageData } = usePageStore()
+const errorStore = useErrorStore()
+
+pageData.title = 'Projects'
+
+const projects = ref<Projects | null>(null)
+async function getProjects() {
+  const { data, error, status } = await projectsQuery
 
   if (error)
-    console.error(error)
+    errorStore.setError({ error, customCode: status })
 
   projects.value = data
+}
 
-  console.log('Projects: ', projects.value)
-})()
+await getProjects()
 </script>
 
 <template>
-  <div>
-    <h1>Projects page</h1>
-    <RouterLink to="/">
-      Go to home
-    </RouterLink>
-    <ul>
-      <li v-for="project in projects" :key="project.id">
-        {{ project.name }}
-      </li>
-    </ul>
-  </div>
+  <DataTable v-if="projects" :columns="columns" :data="projects" />
 </template>
 
 <style scoped></style>
