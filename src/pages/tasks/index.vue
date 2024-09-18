@@ -4,17 +4,19 @@ import type { TasksWithProjects } from '@/utils/supaQueries'
 import { tasksWithProjectsQuery } from '@/utils/supaQueries'
 import { usePageStore } from '@/stores/page'
 import { columns } from '@/utils/tableColumns/tasksColumns'
+import { useErrorStore } from '@/stores/error'
 
 const { pageData } = usePageStore()
+const errorStore = useErrorStore()
 pageData.title = 'Tasks'
 
 const tasks = ref<TasksWithProjects | null>(null)
 
 async function getTasks() {
-  const { data, error } = await tasksWithProjectsQuery
+  const { data, error, status } = await tasksWithProjectsQuery
 
   if (error)
-    console.error(error)
+    errorStore.setError({ error, customCode: status })
 
   tasks.value = data
 }

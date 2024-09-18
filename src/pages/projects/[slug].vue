@@ -4,9 +4,11 @@ import { useRoute } from 'vue-router'
 import type { Project } from '@/utils/supaQueries'
 import { projectQuery } from '@/utils/supaQueries'
 import { usePageStore } from '@/stores/page'
+import { useErrorStore } from '@/stores/error'
 
 const route = useRoute('/projects/[slug]')
 const { pageData } = usePageStore()
+const errorStore = useErrorStore()
 
 const project = ref<Project | null>(null)
 
@@ -15,10 +17,10 @@ watch(
   () => (pageData.title = `Project: ${project.value?.name || ''}`),
 )
 async function getProjects() {
-  const { data, error } = await projectQuery(route.params.slug)
+  const { data, error, status } = await projectQuery(route.params.slug)
 
   if (error)
-    console.error(error)
+    errorStore.setError({ error, customCode: status })
 
   project.value = data
 }

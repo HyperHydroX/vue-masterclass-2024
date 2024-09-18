@@ -4,9 +4,11 @@ import { ref, watch } from 'vue'
 import { usePageStore } from '@/stores/page'
 import type { Task } from '@/utils/supaQueries'
 import { taskQuery } from '@/utils/supaQueries'
+import { useErrorStore } from '@/stores/error'
 
 const route = useRoute('/tasks/[id]')
 const { pageData } = usePageStore()
+const errorStore = useErrorStore()
 
 const task = ref<Task | null>(null)
 
@@ -16,10 +18,10 @@ watch(
 )
 
 async function getTask() {
-  const { data, error } = await taskQuery(route.params.id)
+  const { data, error, status } = await taskQuery(route.params.id)
 
   if (error)
-    console.error(error)
+    errorStore.setError({ error, customCode: status })
 
   task.value = data
 }
