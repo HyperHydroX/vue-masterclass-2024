@@ -42,3 +42,7 @@ export function projectQuery(slug: string) {
     ).eq('slug', slug).single()
 }
 export type Project = QueryData<ReturnType<typeof projectQuery>>
+
+export async function profileQuery(id: string) {
+  return supabase.from('profiles').select().eq('id', id).single()
+}
