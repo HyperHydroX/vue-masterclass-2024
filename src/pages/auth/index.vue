@@ -6,6 +6,8 @@ const router = useRouter()
 router.push('/auth/login')
 </script>
 
-<template></template>
+<template>
+  <div />
+</template>
 
 <style scoped></style>
